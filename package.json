@@ -15,5 +15,9 @@
     "url": "https://github.com/p6h6di/pizzastack-auth-service/issues"
   },
   "homepage": "https://github.com/p6h6di/pizzastack-auth-service#readme",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "@types/node": "^24.0.10",
+    "typescript": "^5.8.3"
+  }
 }
