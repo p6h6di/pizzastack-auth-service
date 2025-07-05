@@ -3,8 +3,10 @@
     "version": "1.0.0",
     "main": "index.js",
     "scripts": {
-        "format": "prettier --write .",
+        "format:fix": "prettier --write .",
         "format:check": "prettier --check .",
+        "lint:fix": "eslint . --fix",
+        "lint:check": "eslint .",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {
@@ -19,8 +21,11 @@
     "homepage": "https://github.com/p6h6di/pizzastack-auth-service#readme",
     "description": "",
     "devDependencies": {
+        "@eslint/js": "^9.30.1",
         "@types/node": "^24.0.10",
+        "eslint": "^9.30.1",
         "prettier": "3.6.2",
-        "typescript": "^5.8.3"
+        "typescript": "^5.8.3",
+        "typescript-eslint": "^8.35.1"
     }
 }
