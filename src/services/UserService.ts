@@ -8,8 +8,20 @@ import bcrypt from "bcrypt";
 export class UserService {
     constructor(private userRepository: Repository<User>) {}
     async create({ email, firstName, lastName, password }: UserData) {
+        // Check if the user already exists
+        const user = await this.userRepository.findOne({
+            where: { email },
+        });
+        if (user) {
+            const error = createHttpError(400, `User email already exists`);
+            throw error;
+        }
+
+        // Hash the password before storing it
         const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+        // Create a new user instance and save it to the database
         try {
             const user = await this.userRepository.save({
                 firstName,
