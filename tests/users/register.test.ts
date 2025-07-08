@@ -80,7 +80,7 @@ describe("POST /auth/register", () => {
             expect(user[0].firstName).toBe(userData.firstName);
             expect(user[0].lastName).toBe(userData.lastName);
             expect(user[0].email).toBe(userData.email);
-            expect(user[0].password).toBe(userData.password);
+            expect(user[0].password).not.toBe(userData.password);
         });
 
         it("should return the id of the created user", async () => {
@@ -119,6 +119,26 @@ describe("POST /auth/register", () => {
             const users = await userRepository.find();
             expect(users[0]).toHaveProperty("role");
             expect(users[0].role).toBe(Roles.CUSTOMER);
+        });
+
+        it("should store the hashed password in the database", async () => {
+            // Arrange
+            const userData = {
+                firstName: "Shivam",
+                lastName: "Thakur",
+                email: "shivamth060@gmail.com",
+                password: "password123",
+            };
+
+            // Act
+            await request(app).post("/auth/register").send(userData);
+
+            // Assert
+            const userRepository = connection.getRepository(User);
+            const users = await userRepository.find();
+            expect(users[0].password).not.toBe(userData.password);
+            expect(users[0].password).toHaveLength(60);
+            expect(users[0].password).toMatch(/^\$2[ayb]\$.{56}$/);
         });
     });
 
