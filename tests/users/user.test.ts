@@ -65,5 +65,25 @@ describe("POST /auth/me", () => {
 
             expect((response.body as Record<string, string>).id).toBe(data.id);
         });
+
+        it("should not return the password field", async () => {
+            const userData = {
+                firstName: "Shivam",
+                lastName: "Thakur",
+                email: "shivamth060@gmail.com",
+                password: "password123",
+            };
+
+            const userRepository = connection.getRepository(User);
+            const data = await userRepository.save({ ...userData, role: Roles.CUSTOMER });
+
+            const accessToken = jwks.token({ sub: String(data.id), role: data.role });
+            const response = await request(app)
+                .get("/auth/me")
+                .set("Cookie", [`accessToken=${accessToken};`])
+                .send();
+
+            expect(response.body as Record<string, string>).not.toHaveProperty("password");
+        });
     });
 });
