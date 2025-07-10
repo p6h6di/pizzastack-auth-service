@@ -1,5 +1,5 @@
 import "reflect-metadata";
-
+import path from "path";
 import express, { Response, Request, NextFunction } from "express";
 import cookieParser from "cookie-parser";
 import logger from "./config/logger";
@@ -7,6 +7,14 @@ import { HttpError } from "http-errors";
 import authRouter from "./routes/auth";
 
 const app = express();
+
+app.use(
+    "/",
+    express.static(path.join(__dirname, "public"), {
+        dotfiles: "allow",
+        index: false,
+    })
+);
 
 app.use(cookieParser());
 app.use(express.json());
