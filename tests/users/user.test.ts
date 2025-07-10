@@ -85,5 +85,11 @@ describe("POST /auth/me", () => {
 
             expect(response.body as Record<string, string>).not.toHaveProperty("password");
         });
+
+        it("should return 401 status code if token does not exist", async () => {
+            const response = await request(app).get("/auth/me").send();
+
+            expect(response.statusCode).toBe(401);
+        });
     });
 });
