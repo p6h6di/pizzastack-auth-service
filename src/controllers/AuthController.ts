@@ -94,13 +94,16 @@ export class AuthController {
                 return;
             }
 
+            console.log(user.password);
+
             // Check if password is correct
-            const isPasswordValid = await this.credentialService.comparePasswords(
+            const passwordMatch = await this.credentialService.comparePasswords(
                 password,
                 user.password
             );
-            if (!isPasswordValid) {
-                const error = createHttpError(400, "Email or password is incorrect");
+
+            if (!passwordMatch) {
+                const error = createHttpError(400, "Email or password does not match.");
                 next(error);
                 return;
             }
@@ -142,6 +145,6 @@ export class AuthController {
 
     async me(req: AuthRequest, res: Response) {
         const user = await this.userService.findById(Number(req.auth.sub));
-        res.json(user);
+        res.json({ ...user, password: undefined });
     }
 }
