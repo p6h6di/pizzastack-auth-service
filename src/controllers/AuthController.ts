@@ -94,8 +94,6 @@ export class AuthController {
                 return;
             }
 
-            console.log(user.password);
-
             // Check if password is correct
             const passwordMatch = await this.credentialService.comparePasswords(
                 password,
@@ -146,5 +144,51 @@ export class AuthController {
     async me(req: AuthRequest, res: Response) {
         const user = await this.userService.findById(Number(req.auth.sub));
         res.json({ ...user, password: undefined });
+    }
+
+    async refresh(req: AuthRequest, res: Response, next: NextFunction) {
+        try {
+            const payload: JwtPayload = {
+                sub: req.auth.sub,
+                role: req.auth.role,
+            };
+
+            const accessToken = this.tokenService.generateAccessToken(payload);
+
+            const user = await this.userService.findById(Number(req.auth.sub));
+            if (!user) {
+                const error = createHttpError(400, "User with the token could not find");
+                next(error);
+                return;
+            }
+
+            const newRefreshToken = await this.tokenService.persistRefreshToken(user);
+
+            await this.tokenService.deleteRefreshToken(Number(req.auth.jti));
+
+            const refreshToken = this.tokenService.generateRefreshToken(payload, newRefreshToken);
+
+            res.cookie("accessToken", accessToken, {
+                domain: "localhost",
+                sameSite: "strict",
+                maxAge: 1000 * 60 * 60, // 1 hour
+                httpOnly: true,
+            });
+
+            res.cookie("refreshToken", refreshToken, {
+                domain: "localhost",
+                sameSite: "strict",
+                maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year
+                httpOnly: true,
+            });
+
+            this.logger.info("User has been logged in", {
+                id: user.id,
+            });
+            res.json({ id: user.id });
+        } catch (error) {
+            next(error);
+            return;
+        }
     }
 }
