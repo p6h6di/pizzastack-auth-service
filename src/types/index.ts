@@ -36,3 +36,22 @@ export interface ITenant {
 export interface CreateTenantRequest extends Request {
     body: ITenant;
 }
+
+export interface TenantRequest extends Request {
+    params: {
+        id: string;
+    };
+}
+
+export interface UserQueryParams {
+    perPage: number;
+    currentPage: number;
+    q: string;
+    role: string;
+}
+
+export interface TenantQueryParams {
+    q: string;
+    perPage: number;
+    currentPage: number;
+}

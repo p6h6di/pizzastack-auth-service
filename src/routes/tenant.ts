@@ -9,7 +9,8 @@ import authenticate from "../middlewares/authenticate";
 import { canAccess } from "../middlewares/canAccess";
 import { Roles } from "../constants";
 import tenantValidator from "../validators/tenant-validator";
-import { CreateTenantRequest } from "../types";
+import { CreateTenantRequest, TenantRequest } from "../types";
+import listUsersValidator from "../validators/list-users-validator";
 
 const router = express.Router();
 
@@ -32,6 +33,28 @@ router.patch(
     tenantValidator,
     (req: CreateTenantRequest, res: Response, next: NextFunction) => {
         tenantController.update(req, res, next) as unknown as RequestHandler;
+    }
+);
+
+router.get("/", listUsersValidator, (req: TenantRequest, res: Response, next: NextFunction) =>
+    tenantController.getAll(req, res, next)
+);
+
+router.get(
+    "/:id",
+    authenticate as RequestHandler,
+    canAccess([Roles.ADMIN]),
+    (req: TenantRequest, res: Response, next: NextFunction) => {
+        tenantController.getOne(req, res, next) as unknown as RequestHandler;
+    }
+);
+
+router.delete(
+    "/:id",
+    authenticate as RequestHandler,
+    canAccess([Roles.ADMIN]),
+    (req: TenantRequest, res: Response, next: NextFunction) => {
+        tenantController.destroy(req, res, next) as unknown as RequestHandler;
     }
 );
 
