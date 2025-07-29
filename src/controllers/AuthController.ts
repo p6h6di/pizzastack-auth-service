@@ -7,6 +7,7 @@ import { JwtPayload } from "jsonwebtoken";
 import { TokenService } from "../services/TokenService";
 import createHttpError from "http-errors";
 import { CredentialService } from "../services/CredentialService";
+import { Roles } from "../constants";
 
 export class AuthController {
     constructor(
@@ -31,7 +32,13 @@ export class AuthController {
                 email,
                 password: "*******", // Do not log passwords
             });
-            const user = await this.userService.create({ email, firstName, lastName, password });
+            const user = await this.userService.create({
+                email,
+                firstName,
+                lastName,
+                password,
+                role: Roles.CUSTOMER,
+            });
             this.logger.info("User has been created", {
                 id: user.id,
             });

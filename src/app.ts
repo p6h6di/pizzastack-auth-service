@@ -6,6 +6,7 @@ import logger from "./config/logger";
 import { HttpError } from "http-errors";
 import authRouter from "./routes/auth";
 import tenantRouter from "./routes/tenant";
+import userRouter from "./routes/user";
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use(express.json());
 
 app.use("/auth", authRouter);
 app.use("/tenants", tenantRouter);
+app.use("/users", userRouter);
 
 // global error handler
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
