@@ -49,7 +49,6 @@ describe("POST /users", () => {
             const users = userRepository.find();
 
             expect([users]).toHaveLength(1);
-            // expect(users.role).toBe(Roles.ADMIN)
         });
 
         it.todo("should return 403 if non admin user tries to create a user");
