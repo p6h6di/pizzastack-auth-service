@@ -3,7 +3,7 @@
         "target": "es2016",
         "lib": ["es6"],
         "module": "commonjs",
-        "rootDir": "./src",
+        "rootDir": "./",
         "outDir": "./dist",
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
@@ -12,5 +12,9 @@
         "skipLibCheck": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true
-    }
+    },
+    "exclude": [
+        "**/*.test.ts",
+        "tests"
+    ],
 }

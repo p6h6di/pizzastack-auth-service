@@ -50,7 +50,5 @@ describe("POST /users", () => {
 
             expect([users]).toHaveLength(1);
         });
-
-        it.todo("should return 403 if non admin user tries to create a user");
     });
 });
