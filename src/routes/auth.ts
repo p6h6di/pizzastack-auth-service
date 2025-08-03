@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from "express";
+import express, { NextFunction, Request, RequestHandler, Response } from "express";
 import { AuthController } from "../controllers/AuthController";
 import { UserService } from "../services/UserService";
 import { AppDataSource } from "../config/data-source";
@@ -31,7 +31,7 @@ router.post("/login", loginValidator, (req: Request, res: Response, next: NextFu
     authController.login(req, res, next)
 );
 
-router.get("/me", authenticate, (req: Request, res: Response) =>
+router.get("/me", authenticate as RequestHandler, (req: Request, res: Response) =>
     authController.me(req as AuthRequest, res)
 );
 
